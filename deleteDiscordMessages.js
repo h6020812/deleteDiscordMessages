@@ -1,5 +1,5 @@
 // Paste this code inside discord.com console
-
+let min = 1;
 (function () {
     let stop;
     let popup;
@@ -57,9 +57,10 @@
     const $ = s => popup.document.querySelector(s);
     const logArea = $('pre');
     const startBtn = $('button#start');
+    let timerId;
     const stopBtn = $('button#stop');
     const autoScroll = $('#autoScroll');
-    startBtn.onclick = async e => {
+    const deleteDetail = async e => {
         const authToken = $('input#authToken').value.trim();
         const authorId = $('input#authorId').value.trim();
         const guildId = $('input#guildId').value.trim();
@@ -104,6 +105,10 @@
             stop = stopBtn.disabled = !(startBtn.disabled = false);
         }
     };
+    startBtn.onclick = () => {
+        timerId = setInterval(deleteDetail, 1000 * 60 * min)
+        console.log("timeID is", timerId)
+    }
     stopBtn.onclick = e => stop = stopBtn.disabled = !(startBtn.disabled = false);
     $('button#clear').onclick = e => { logArea.innerHTML = ''; };
     $('button#getToken').onclick = e => {
@@ -276,13 +281,13 @@
             
             if (messagesToDelete.length > 0) {
 
-                if (++iterations < 1) {
-                    log.verb(`Waiting for your confirmation...`);
-                    if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
-                        messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
-                            return end(log.error('Aborted by you!'));
-                    log.verb(`OK`);
-                }
+                // if (++iterations < 1) {
+                //     log.verb(`Waiting for your confirmation...`);
+                //     if (!await ask(`Do you want to delete ~${total} messages?\nEstimated time: ${etr}\n\n---- Preview ----\n` +
+                //         messagesToDelete.map(m => `${m.author.username}#${m.author.discriminator}: ${m.attachments.length ? '[ATTACHMENTS]' : m.content}`).join('\n')))
+                //             return end(log.error('Aborted by you!'));
+                //     log.verb(`OK`);
+                // }
                 
                 for (let i = 0; i < messagesToDelete.length; i++) {
                     const message = messagesToDelete[i];
